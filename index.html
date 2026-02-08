@@ -1,0 +1,446 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Valentine Verification 💘</title>
+  <style>
+    :root {
+      --bg: #fff5f7;
+      --card: #ffffff;
+      --text: #1f1f1f;
+      --muted: #6b6b6b;
+      --accent: #ff4d6d;
+      --accent2: #ff8fab;
+      --shadow: 0 10px 30px rgba(0,0,0,.08);
+      --radius: 18px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      background: radial-gradient(circle at top, #ffe0e9 0%, var(--bg) 45%, #ffffff 100%);
+      color: var(--text);
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 22px;
+    }
+    .card {
+      width: min(920px, 100%);
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      border: 1px solid rgba(255,77,109,.15);
+    }
+    header {
+      padding: 20px 22px;
+      background: linear-gradient(90deg, rgba(255,77,109,.12), rgba(255,143,171,.10));
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 18px;
+      letter-spacing: .2px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .pill {
+      font-size: 12px;
+      color: #8a2b3b;
+      background: rgba(255,77,109,.12);
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,77,109,.18);
+      white-space: nowrap;
+    }
+
+    main { padding: 22px; }
+    .step-title {
+      margin: 0 0 6px;
+      font-size: 22px;
+    }
+    .step-sub {
+      margin: 0 0 18px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .row { display: flex; gap: 18px; flex-wrap: wrap; }
+    .panel {
+      flex: 1 1 320px;
+      background: rgba(255,77,109,.04);
+      border: 1px solid rgba(255,77,109,.12);
+      border-radius: 16px;
+      padding: 16px;
+    }
+
+    /* Step 1 checkbox */
+    .checkline {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px;
+      border-radius: 14px;
+      background: #fff;
+      border: 1px solid rgba(0,0,0,.08);
+    }
+    input[type="checkbox"] {
+      width: 22px; height: 22px;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+    .checkline label { cursor: pointer; }
+    .btn {
+      appearance: none;
+      border: none;
+      background: var(--accent);
+      color: white;
+      padding: 12px 14px;
+      border-radius: 14px;
+      font-weight: 650;
+      cursor: pointer;
+      box-shadow: 0 10px 18px rgba(255,77,109,.25);
+      transition: transform .05s ease, opacity .15s ease;
+    }
+    .btn:active { transform: translateY(1px); }
+    .btn:disabled { opacity: .45; cursor: not-allowed; box-shadow: none; }
+
+    /* Modal */
+    .backdrop {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.38);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+    }
+    .modal {
+      width: min(720px, 100%);
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 18px 60px rgba(0,0,0,.25);
+      overflow: hidden;
+      border: 1px solid rgba(255,77,109,.18);
+    }
+    .modal-head {
+      padding: 16px 18px;
+      background: linear-gradient(90deg, rgba(255,77,109,.12), rgba(255,143,171,.10));
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .modal-head h2 {
+      margin: 0;
+      font-size: 16px;
+    }
+    .x {
+      background: transparent;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      padding: 6px 10px;
+      border-radius: 10px;
+    }
+    .x:hover { background: rgba(0,0,0,.06); }
+
+    .modal-body { padding: 16px 18px 18px; }
+    .prompt {
+      margin: 0 0 12px;
+      color: var(--muted);
+    }
+    .prompt strong { color: var(--text); }
+
+    /* Grid */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    .tile {
+      position: relative;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 2px solid rgba(0,0,0,.08);
+      background: #f7f7f7;
+      aspect-ratio: 1 / 1;
+      cursor: pointer;
+      user-select: none;
+      transition: border-color .12s ease, transform .06s ease;
+    }
+    .tile:active { transform: scale(.99); }
+    .tile img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: saturate(1.03);
+    }
+    .tile.selected {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(255,77,109,.18) inset;
+    }
+    .tile.selected::after{
+      content: "✓";
+      position: absolute;
+      top: 8px; right: 8px;
+      background: rgba(255,77,109,.92);
+      color: #fff;
+      width: 26px; height: 26px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      box-shadow: 0 10px 18px rgba(255,77,109,.25);
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+    .btn.secondary {
+      background: #fff;
+      color: var(--text);
+      border: 1px solid rgba(0,0,0,.12);
+      box-shadow: none;
+    }
+
+    /* Reveal screen */
+    .reveal {
+      display: none;
+      text-align: center;
+      padding: 30px 14px 36px;
+    }
+    .big {
+      font-size: clamp(28px, 4.5vw, 44px);
+      margin: 0 0 10px;
+    }
+    .msg {
+      margin: 0 auto 18px;
+      max-width: 60ch;
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 16px;
+    }
+    .heart {
+      font-size: 44px;
+      filter: drop-shadow(0 12px 18px rgba(255,77,109,.25));
+      margin-bottom: 10px;
+    }
+
+    footer {
+      padding: 16px 22px;
+      border-top: 1px solid rgba(0,0,0,.08);
+      color: var(--muted);
+      font-size: 12px;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    code { background: rgba(0,0,0,.05); padding: 2px 6px; border-radius: 8px; }
+
+    @media (max-width: 560px){
+      .grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+      main { padding: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="card" role="application" aria-label="Valentine page">
+    <header>
+      <h1>Valentine Verification <span aria-hidden="true">💘</span></h1>
+      <div class="pill">Totally not a real CAPTCHA</div>
+    </header>
+
+    <main>
+      <!-- Step 1 -->
+      <section id="step1">
+        <h2 class="step-title">One quick check…</h2>
+        <p class="step-sub">
+          Please confirm you’re <strong>my Valentine</strong>. Then you’ll get a tiny image challenge.
+        </p>
+
+        <div class="row">
+          <div class="panel">
+            <div class="checkline">
+              <input id="notRobot" type="checkbox" />
+              <label for="notRobot"><strong>I’m not a robot</strong> (I’m your Valentine)</label>
+            </div>
+            <div style="height: 12px"></div>
+            <button id="continueBtn" class="btn" disabled>Continue</button>
+          </div>
+
+          <div class="panel">
+            <p style="margin:0 0 10px;color:var(--muted);line-height:1.5">
+              Tip: Use 9 photos that are easy to recognize (your face in each).
+              This is a playful mini-game — not actual bot protection.
+            </p>
+            <p style="margin:0;color:var(--muted);line-height:1.5">
+              Photos loaded from: <code>photos/me1.jpg</code> … <code>photos/me9.jpg</code>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Reveal -->
+      <section id="reveal" class="reveal" aria-live="polite">
+        <div class="heart" aria-hidden="true">💗</div>
+        <h2 class="big">Happy Valentine’s Day!</h2>
+        <p class="msg" id="valentineMessage">
+          I love you a ridiculous amount. Thank you for being my favorite person.
+          You make everyday better — and I’m so lucky to be yours.
+        </p>
+        <button class="btn" id="restartBtn">Do it again 😄</button>
+      </section>
+    </main>
+
+    <footer>
+      <div>Made with love 🥹</div>
+      <div>Change the message in <code>index.html</code> → <code>#valentineMessage</code></div>
+    </footer>
+  </div>
+
+  <!-- Modal -->
+  <div class="backdrop" id="backdrop" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-head">
+        <h2 id="modalTitle">Select all images that contain: <span style="color:var(--accent)">my boyfriend</span></h2>
+        <button class="x" id="closeModal" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body">
+        <p class="prompt">Click every tile that has <strong>me</strong>. (Hint: they all do 😅)</p>
+
+        <div class="grid" id="grid"></div>
+
+        <div class="modal-actions">
+          <button class="btn secondary" id="resetSel">Reset</button>
+          <button class="btn" id="verifyBtn" disabled>Verify</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- Configuration ---
+    const PHOTO_COUNT = 9;
+    const PHOTO_PATHS = Array.from({ length: PHOTO_COUNT }, (_, i) => `photos/me${i+1}.jpg`);
+
+    // Set which tiles are "correct". Here: all of them.
+    const CORRECT_SET = new Set(PHOTO_PATHS);
+
+    // --- Elements ---
+    const notRobot = document.getElementById('notRobot');
+    const continueBtn = document.getElementById('continueBtn');
+    const backdrop = document.getElementById('backdrop');
+    const closeModal = document.getElementById('closeModal');
+    const grid = document.getElementById('grid');
+    const verifyBtn = document.getElementById('verifyBtn');
+    const resetSel = document.getElementById('resetSel');
+
+    const step1 = document.getElementById('step1');
+    const reveal = document.getElementById('reveal');
+    const restartBtn = document.getElementById('restartBtn');
+
+    // --- State ---
+    const selected = new Set();
+
+    // --- Helpers ---
+    function openModal(){
+      backdrop.style.display = 'flex';
+      backdrop.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeModalFn(){
+      backdrop.style.display = 'none';
+      backdrop.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+    function updateVerifyState(){
+      // Enable verify only if they selected ALL correct tiles and nothing else
+      const allCorrectChosen = CORRECT_SET.size === selected.size &&
+        [...selected].every(x => CORRECT_SET.has(x));
+      verifyBtn.disabled = !allCorrectChosen;
+    }
+
+    // --- Build grid ---
+    function buildGrid(){
+      grid.innerHTML = '';
+      selected.clear();
+      verifyBtn.disabled = true;
+
+      PHOTO_PATHS.forEach((src) => {
+        const tile = document.createElement('button');
+        tile.className = 'tile';
+        tile.type = 'button';
+        tile.setAttribute('aria-pressed', 'false');
+        tile.dataset.src = src;
+
+        const img = document.createElement('img');
+        img.alt = "Photo tile";
+        img.src = src;
+
+        tile.appendChild(img);
+
+        tile.addEventListener('click', () => {
+          const key = tile.dataset.src;
+          if (selected.has(key)) {
+            selected.delete(key);
+            tile.classList.remove('selected');
+            tile.setAttribute('aria-pressed', 'false');
+          } else {
+            selected.add(key);
+            tile.classList.add('selected');
+            tile.setAttribute('aria-pressed', 'true');
+          }
+          updateVerifyState();
+        });
+
+        grid.appendChild(tile);
+      });
+    }
+
+    // --- Wire up step 1 ---
+    notRobot.addEventListener('change', () => {
+      continueBtn.disabled = !notRobot.checked;
+    });
+
+    continueBtn.addEventListener('click', () => {
+      buildGrid();
+      openModal();
+    });
+
+    closeModal.addEventListener('click', closeModalFn);
+    backdrop.addEventListener('click', (e) => {
+      if (e.target === backdrop) closeModalFn();
+    });
+
+    resetSel.addEventListener('click', () => {
+      buildGrid();
+    });
+
+    verifyBtn.addEventListener('click', () => {
+      closeModalFn();
+      step1.style.display = 'none';
+      reveal.style.display = 'block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    restartBtn.addEventListener('click', () => {
+      step1.style.display = 'block';
+      reveal.style.display = 'none';
+      notRobot.checked = false;
+      continueBtn.disabled = true;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+</body>
+</html>
